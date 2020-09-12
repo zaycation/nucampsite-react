@@ -10,3 +10,7 @@ body {
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.comment-container {
+  margin-bottom: 15px;
+}
