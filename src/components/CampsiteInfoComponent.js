@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { LocalForm, Control, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -33,9 +34,9 @@ class CommentForm extends Component {
 
   onSubmit = (e) => {
     this.toggleModal();
-    this.props.addComment(this.props.campsiteId, e.rating, e.author, e.text)
-    console.log('Current State is: ' + JSON.stringify(e));
-    alert('Current State is: ' + JSON.stringify(e));
+    this.props.addComment(this.props.campsiteId, e.rating, e.author, e.text);
+    console.log("Current State is: " + JSON.stringify(e));
+    alert("Current State is: " + JSON.stringify(e));
   };
 
   render() {
@@ -124,7 +125,7 @@ function RenderCampsite({ campsite }) {
   );
 }
 
-function RenderComments({comments, addComment, campsiteId}) {
+function RenderComments({ comments, addComment, campsiteId }) {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
@@ -153,6 +154,26 @@ function RenderComments({comments, addComment, campsiteId}) {
 }
 
 function CampsiteInfo(props) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{props.errMess}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (props.campsite) {
     return (
       <div className="container">
@@ -170,10 +191,11 @@ function CampsiteInfo(props) {
         </div>
         <div className="row">
           <RenderCampsite campsite={props.campsite} />
-          <RenderComments 
+          <RenderComments
             comments={props.comments}
             addComment={props.addComment}
-            campsiteId={props.campsite.id} />
+            campsiteId={props.campsite.id}
+          />
         </div>
       </div>
     );
