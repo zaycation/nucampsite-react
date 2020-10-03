@@ -1,21 +1,34 @@
 import React, { Component } from "react";
-import Directory from "./DirectoryComponent";
-import CampsiteInfo from "./CampsiteInfoComponent";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
+import Directory from "./DirectoryComponent";
+import CampsiteInfo from "./CampsiteInfoComponent";
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import {
   postComment,
   fetchCampsites,
   fetchComments,
   fetchPromotions,
+  fetchPartners,
+  postFeedback,
 } from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+
+const mapDispatchToProps = {
+  postComment: (campsiteId, rating, author, text) =>
+    postComment(campsiteId, rating, author, text),
+  fetchCampsites: () => fetchCampsites(),
+  resetFeedbackForm: () => actions.reset("feedbackForm"),
+  fetchComments: () => fetchComments(),
+  fetchPromotions: () => fetchPromotions(),
+  fetchPartners: () => fetchPartners(),
+  postFeedback: (feedback) => postFeedback(feedback),
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -26,20 +39,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {
-  postComment: (campsiteId, rating, author, text) =>
-    postComment(campsiteId, rating, author, text),
-  fetchCampsites: () => fetchCampsites(),
-  resetFeedbackForm: () => actions.reset("feedbackForm"),
-  fetchComments: () => fetchComments(),
-  fetchPromotions: () => fetchPromotions(),
-};
-
 class Main extends Component {
   componentDidMount() {
     this.props.fetchCampsites();
     this.props.fetchComments();
     this.props.fetchPromotions();
+    this.props.fetchPartners();
   }
 
   render() {
@@ -60,7 +65,13 @@ class Main extends Component {
           }
           promotionLoading={this.props.promotions.isLoading}
           promotionErrMess={this.props.promotions.errMess}
-          partner={this.props.partners.filter((partner) => partner.featured)[0]}
+          partner={
+            this.props.partners.partners.filter(
+              (partner) => partner.featured
+            )[0]
+          }
+          partnerLoading={this.props.partners.isLoading}
+          partnerErrMess={this.props.partners.errMess}
         />
       );
     };
@@ -104,7 +115,10 @@ class Main extends Component {
                 exact
                 path="/contactus"
                 render={() => (
-                  <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+                  <Contact
+                    postFeedback={this.props.postFeedback}
+                    resetFeedbackForm={this.props.resetFeedbackForm}
+                  />
                 )}
               />
               <Route
