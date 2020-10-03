@@ -15,10 +15,52 @@ import {
 import { LocalForm, Control, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
+
+function RenderCampsite({ campsite }) {
+  return (
+    <div className="col-md-5 m-1">
+      <Card>
+        <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
+        <CardBody>
+          <CardText>{campsite.description}</CardText>
+        </CardBody>
+      </Card>
+    </div>
+  );
+}
+
+function RenderComments({ comments, addComment, campsiteId }) {
+  if (comments) {
+    return (
+      <div className="col-md-5 m-1">
+        <h4>Comments</h4>
+        {comments.map((comment) => (
+          <div className="comment-container">
+            <div>
+              <p>{comment.text}</p>
+            </div>
+            <div>
+              <strong>{comment.author}</strong>{" "}
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+              }).format(new Date(Date.parse(comment.date)))}
+            </div>
+          </div>
+        ))}
+
+        <CommentForm campsiteId={campsiteId} addComment={addComment} />
+      </div>
+    );
+  }
+  return <div />;
+}
 
 class CommentForm extends Component {
   constructor(props) {
@@ -110,47 +152,6 @@ class CommentForm extends Component {
       </>
     );
   }
-}
-
-function RenderCampsite({ campsite }) {
-  return (
-    <div className="col-md-5 m-1">
-      <Card>
-        <CardImg top src={campsite.image} alt={campsite.name} />
-        <CardBody>
-          <CardText>{campsite.description}</CardText>
-        </CardBody>
-      </Card>
-    </div>
-  );
-}
-
-function RenderComments({ comments, addComment, campsiteId }) {
-  if (comments) {
-    return (
-      <div className="col-md-5 m-1">
-        <h4>Comments</h4>
-        {comments.map((comment) => (
-          <div className="comment-container">
-            <div>
-              <p>{comment.text}</p>
-            </div>
-            <div>
-              <strong>{comment.author}</strong>{" "}
-              {new Intl.DateTimeFormat("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit",
-              }).format(new Date(Date.parse(comment.date)))}
-            </div>
-          </div>
-        ))}
-
-        <CommentForm campsiteId={campsiteId} addComment={addComment} />
-      </div>
-    );
-  }
-  return <div />;
 }
 
 function CampsiteInfo(props) {
