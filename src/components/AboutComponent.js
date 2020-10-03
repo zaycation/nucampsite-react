@@ -21,12 +21,15 @@ const RenderPartner = ({ partner }) => {
       </React.Fragment>
     );
   }
-  return <div />
 };
 
 function About(props) {
   const partners = props.partners.map((partner) => {
-    return <Media key={partner.id} tag="li"><RenderPartner partner={partner} /></Media>;
+    return (
+      <Media tag="li" key={partner.id}>
+        <RenderPartner partner={partner} />
+      </Media>
+    );
   });
 
   return (

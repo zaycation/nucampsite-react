@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { actions } from "react-redux-form";
 import Directory from "./DirectoryComponent";
+import CampsiteInfo from "./CampsiteInfoComponent";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
-import CampsiteInfo from "./CampsiteInfoComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import {
@@ -15,6 +14,7 @@ import {
   fetchComments,
   fetchPromotions,
 } from "../redux/ActionCreators";
+import { actions } from "react-redux-form";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const mapStateToProps = (state) => {
@@ -83,7 +83,6 @@ class Main extends Component {
         />
       );
     };
-
     return (
       <div>
         <Header />
